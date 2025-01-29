@@ -15,6 +15,8 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
+library(ggplot2)
+
 ```
 
 
@@ -51,11 +53,6 @@ print(tabla0)
 
 ### 4.1. (3 puntos) ¿Cuáles son las 10 películas que contaron con más presupuesto?
 
-
-
-### 4.2. (3 puntos) ¿Cuáles son las 10 películas que más ingresos tuvieron?
-
-
 Las 10 peliculas con mayor presupuesto fueron:
 ```{r ,echo=FALSE}
 pelis_por_presupuesto <- pelis[order(-pelis$budget),]
@@ -63,29 +60,54 @@ pelistop <- pelis_por_presupuesto[,c("originalTitle","budget")]
 head(pelistop,10) 
 ```
 
-
-
 ### 4.2. (3 puntos) ¿Cuáles son las 10 películas que más ingresos tuvieron?
-Las 10 películas con mayores ingresos fueron:
+
+
 ```{r ,echo=FALSE}
-pelis_por_presupuesto <- pelis[order(-pelis$revenue),]
-pelistop <- pelis_por_presupuesto[,c("originalTitle","revenue")]
+pelis_por_ingreso <- pelis[order(-pelis$revenue),]
+pelistop <- pelis_por_presupuesto[,c("originalTitle","revenue","genres")]
 head(pelistop,10) 
 ```
 
 ### 4.3. (3 puntos) ¿Cuál es la película que más votos tuvo?
+```{r ,echo=FALSE}
+pelis_ord <- pelis[order(-pelis$voteCount),]
 
+```
+La película que más votos tuvo fue `r pelis_ord$originalTitle[1] `.
 
 ### 4.4. (3 puntos) ¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?
 
 
+
 ### 4.5. (8 puntos) ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras.
+
+```{r, echo=FALSE}
+pelis$releaseDate <- as.Date(pelis$releaseDate, format="%Y-%m-%d")  
+año <- as.numeric(format(pelis$releaseDate, "%Y"))
+años_df <- data.frame(año = año)
+
+
+ggplot(años_df, aes(x = año)) +
+  geom_histogram(binwidth = 1, fill = "#69b3a2", color = "black", alpha = 0.7) +
+  theme_minimal() +
+  labs(title = "Peliculas por año", x = "Año", y = "cantidad") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"))
+conteo_años <- count(años_df,años_df$año)
+conteo_años <- conteo_años[order(-conteo_años$n),]
+```
+El año que se rodaron más películas fue el `r conteo_años$año[1]`
 
 
 ### 4.6. (9 puntos) ¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico. ¿A qué género principal pertenecen las películas más largas?
 
 
+
+
 ### 4.7. (8 puntos) ¿Las películas de qué género principal obtuvieron mayores ganancias?
+```{r}
+
+```
 
 
 ### 4.8. (3 puntos) ¿La cantidad de actores influye en los ingresos de las películas? ¿Se han hecho películas con más actores en los últimos años?
