@@ -2,7 +2,7 @@
 title: "Proyecto1"
 author:
 - "Juan Luis Solórzano (carnet: 201598)"
-- "Mica (carnet: XXXXXXX)"
+- "Micaela Yataz (carnet: 18960)"
 date: "2025-01-20"
 output: pdf_document
 ---
@@ -35,6 +35,7 @@ summary(pelis)
 ## 2. (5 puntos) Diga el tipo de cada una de las variables (cualitativa ordinal o nominal, cuantitativa continua, cuantitativa discreta)
 
 
+
 ```{r, echo=FALSE}
 variables <- c("id","budget","genres","homePage","productionCompany","productionCompanyCountry","productionCountry","revenue","runtime","video","director","actors","actorsPopularity","actorsCharacter","originalTitle","title","originalLanguage","popularity","releaseDate","voteAvg","voteCount","genresAmount","productionCoAmount","productionCountriesAmount","actorsAmount","castWomenAmount","castMenAmount")
 tipo <- c("cualitatva nominal","cuantitativa discreta","cualitatva nominal","cualitatva nominal","cualitatva nominal","cualitatva nominal","cualitatva nominal","cuantitativa discreta","cuantitativa discreta","cualitatva nominal","cualitatva nominal","cualitatva nominal","cuantitativa continua","cualitatva nominal","cualitatva nominal","cualitatva nominal","cualitatva nominal","cuantitativa continua","cualitativa ordinal","cuantitativa continua","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta")
@@ -47,6 +48,14 @@ print(tabla0)
 
 
 ## 3. (6 puntos) Investigue si las variables cuantitativas siguen una distribución normal y haga una tabla de frecuencias de las variables cualitativas. Explique todos los resultados.
+```{r, echo=FALSE}
+hist(peliculas$budget$, main="Histograma del presupuesto para la película", xlab="Presupuesto de la pelicula")
+qqnorm(peliculas$budget)
+qqline(peliculas$budget)
+shapiro.test.(peliculas$budget)
+
+```
+
 
 
 ## 4. Responda las siguientes preguntas:
