@@ -1,0 +1,312 @@
+---
+title: "Proyecto1"
+author:
+- "Juan Luis Solórzano (carnet: 201598)"
+- "Micaela Yataz (carnet:18960)"
+date: "2025-01-20"
+output: pdf_document
+---
+
+
+
+
+## 1. (3 puntos) Haga una exploración rápida de sus datos, para eso haga un resumen de su conjunto de datos.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+
+```
+
+
+```{r cargando archivo, echo=FALSE}
+pelis <- read.csv('movies.csv')
+```
+
+
+## 1. (3 puntos) Haga una exploración rápida de sus datos, para eso haga un resumen de su conjunto de datos.
+```{r}
+summary(pelis)
+```
+
+
+
+## 2. (5 puntos) Diga el tipo de cada una de las variables (cualitativa ordinal o nominal, cuantitativa continua, cuantitativa discreta)
+
+
+```{r, echo=FALSE}
+variables <- c("id","budget","genres","homePage","productionCompany","productionCompanyCountry","productionCountry","revenue","runtime","video","director","actors","actorsPopularity","actorsCharacter","originalTitle","title","originalLanguage","popularity","releaseDate","voteAvg","voteCount","genresAmount","productionCoAmount","productionCountriesAmount","actorsAmount","castWomenAmount","castMenAmount")
+tipo <- c("cualitatva nominal","cuantitativa discreta","cualitatva nominal","cualitatva nominal","cualitatva nominal","cualitatva nominal","cualitatva nominal","cuantitativa discreta","cuantitativa discreta","cualitatva nominal","cualitatva nominal","cualitatva nominal","cuantitativa continua","cualitatva nominal","cualitatva nominal","cualitatva nominal","cualitatva nominal","cuantitativa continua","cualitativa ordinal","cuantitativa continua","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta","cuantitativa discreta")
+tabla0 <- data.frame(tipo,row.names = variables)
+print(tabla0)
+```
+
+
+
+
+
+## 3. (6 puntos) Investigue si las variables cuantitativas siguen una distribución normal y haga una tabla de frecuencias de las variables cualitativas. Explique todos los resultados.
+
+Para evaluar la normalidad de las variables, se realizó análisis de una grafica Q-Q normal y la prueba kolmogorrov-Smirnov.
+
+```{r, echo=FALSE}
+library(nortest)
+qqnorm(pelis$budget, main="Figura 1")
+qqline(pelis$budget)
+pelis_sin_na<-pelis[!is.na(pelis$budget),]
+lillie.test(pelis_sin_na$budget)
+```
+´´´
+ Como se muestra en la gráica 1, muestra puntos que la parte derecha hay datos que no se alinean a la linea diagonal. Por lo que muestra que la mayoria de peliculas tienen presupuestos que son relativamente bajos, y hay pocas peliculas que tienen presupuestos altos. Apoyado con la prueba kolmogorrov-Smirnov, con D = 0.30625 que suguiere que los datos nos siguen una distribución normal.
+
+
+
+
+```{r, echo=FALSE}
+qqnorm(pelis$popularity, main="Figura 2")
+qqline(pelis$popularity)
+pelis_sin_na<-pelis[!is.na(pelis$popularity),]
+lillie.test(pelis_sin_na$popularity)
+
+```
+Con la figura 2 y el valor D de la prueba Kolmogrov-Smirnov se llega a la misma conclucion: los datos no tienen distribución normal, al tener una curvatura hacia arriba en la parte derecha, lo que sugiere que varias pelicuals mantienen un indice de popularidad moderado, pero hay casos de pelíclas que llegan a tener mas popularidad lo que la grafica representa con esa asimetría. 
+
+```{r, echo=FALSE}
+
+qqnorm(pelis$revenue, main="Figura 3")
+qqline(pelis$revenue)
+pelis_sin_na<-pelis[!is.na(pelis$revenue),]
+lillie.test(pelis_sin_na$revenue)
+
+```
+La gráfica de la figura 3 como las anteriores indica la poca tendencia a la normalidad, apoyada con el valor de  D= 0.35223, del test de Kolmogorov-Smirnov. Pocas peliculas logran generar un gran ingreso, auque la gráfica muestra una asimetria positiva. 
+```{r, echo=FALSE}
+qqnorm(pelis$runtime,  main="Figura 4")
+qqline(pelis$runtime)
+pelis_sin_na<-pelis[!is.na(pelis$runtime),]
+lillie.test(pelis_sin_na$runtime)
+
+```
+D = 0.14408, p-value < 2.2e-16
+```{r, echo=FALSE}
+
+qqnorm(pelis$genresAmount, main="Figura 5")
+qqline(pelis$genresAmount)
+pelis_sin_na<-pelis[!is.na(pelis$genresAmount),]
+lillie.test(pelis_sin_na$genresAmount)
+
+```
+A comparacion con las otras variables, aqui se nota 
+```{r, echo=FALSE}
+
+qqnorm(pelis$productionCoAmount, main="Figura 6")
+qqline(pelis$productionCoAmount)
+pelis_sin_na<-pelis[!is.na(pelis$productionCoAmount),]
+lillie.test(pelis_sin_na$productionCoAmount)
+
+```
+
+
+```{r, echo=FALSE}
+
+qqnorm(pelis$voteCount, main="Figura 7")
+qqline(pelis$voteCount)
+pelis_sin_na<-pelis[!is.na(pelis$voteCount),]
+
+lillie.test(pelis_sin_na$voteCount)
+
+```
+
+```{r, echo=FALSE}
+
+qqnorm(pelis$voteAvg, main="Figura 4")
+qqline(pelis$voteAvg)
+pelis_sin_na<-pelis[!is.na(pelis$voteAvg),]
+
+lillie.test(pelis_sin_na$voteAvg)
+
+```
+```{r, echo=FALSE}
+#class(pelis$actorsPopularity)
+qqnorm(pelis$actorsPopularity, main="Figura 8")
+qqline(pelis$actorsPopularity)
+pelis_sin_na<-pelis[!is.na(pelis$actorsPopularity),]
+lillie.test(pelis_sin_na$actorsPopularity)
+
+```
+
+
+```{r, echo=FALSE}
+
+qqnorm(pelis$actorsAmount, main="Figura 9")
+qqline(pelis$actorsAmount)
+pelis_sin_na<-pelis[!is.na(pelis$actorsAmount),]
+lillie.test(pelis_sin_na$actorsAmount)
+
+```
+
+```{r, echo=FALSE}
+pelis$castWomenAmount<-as.numeric(pelis$castWomenAmount)
+
+qqnorm(pelis$castWomenAmount, main="Figura 11")
+qqline(pelis$castWomenAmount)
+pelis_sin_na<-pelis[!is.na(pelis$castWomenAmount),]
+lillie.test(pelis_sin_na$castWomenAmount)
+
+```
+
+```{r, echo=FALSE}
+pelis$castMenAmount<-as.numeric(pelis$castMenAmount)
+
+qqnorm(pelis$castMenAmount, main="Figura 12")
+qqline(pelis$castMenAmount)
+pelis_sin_na<-pelis[!is.na(pelis$castMenAmount),]
+lillie.test(pelis_sin_na$castMenAmount)
+
+```
+#Tablas de frecuencia.
+
+## 4. Responda las siguientes preguntas:
+
+### 4.1. (3 puntos) ¿Cuáles son las 10 películas que contaron con más presupuesto?
+
+Las 10 peliculas con mayor presupuesto fueron:
+```{r ,echo=FALSE}
+pelis_por_presupuesto <- pelis[order(-pelis$budget),]
+pelistop <- pelis_por_presupuesto[,c("originalTitle","budget")]
+head(pelistop,10) 
+```
+
+### 4.2. (3 puntos) ¿Cuáles son las 10 películas que más ingresos tuvieron?
+
+
+```{r ,echo=FALSE}
+pelis_por_ingreso <- pelis[order(-pelis$revenue),]
+pelistop <- pelis_por_presupuesto[,c("originalTitle","revenue","genres")]
+head(pelistop,10) 
+```
+
+### 4.3. (3 puntos) ¿Cuál es la película que más votos tuvo?
+```{r ,echo=FALSE}
+pelis_ord <- pelis[order(-pelis$voteCount),]
+
+```
+La película que más votos tuvo fue `r pelis_ord$originalTitle[1] `.
+
+### 4.4. (3 puntos) ¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?
+
+```{r ,echo=FALSE}
+peli_ordenado<-pelis[order(pelis$voteCount),]
+peor_peli<-head(peli_ordenado,n=1)
+
+
+```
+La peor película según los votos de todos los usuarios fue `cat(peor_peli$title) `
+
+
+### 4.5. (8 puntos) ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras.
+
+```{r, echo=FALSE}
+pelis$releaseDate <- as.Date(pelis$releaseDate, format="%Y-%m-%d")  
+año <- as.numeric(format(pelis$releaseDate, "%Y"))
+años_df <- data.frame(año = año)
+
+
+ggplot(años_df, aes(x = año)) +
+  geom_histogram(binwidth = 1, fill = "#69b3a2", color = "black", alpha = 0.7) +
+  theme_minimal() +
+  labs(title = "Peliculas por año", x = "Año", y = "cantidad") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"))
+conteo_años <- count(años_df,años_df$año)
+conteo_años <- conteo_años[order(-conteo_años$n),]
+```
+El año que se rodaron más películas fue el `r conteo_años$año[1]`
+
+
+### 4.6. (9 puntos) ¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico. ¿A qué género principal pertenecen las películas más largas?
+
+```{r}
+fechas<-(pelis$releaseDate)
+fechas_ord<-fechas[order(fechas, decreasing = TRUE)]
+fechas_20<-(fechas_ord[1:20])
+pelicualas_genero_fechas<-data.frame(genero_fecha=c(pelis$genres), fechas_20)
+head(pelicualas_genero_fechas,20)
+#unique(head(pelicualas_genero_fechas,20))
+
+table(head(pelicualas_genero_fechas,20))
+
+
+
+
+```
+
+
+### 4.7. (8 puntos) ¿Las películas de qué género principal obtuvieron mayores ganancias?
+```{r}
+
+```
+
+
+### 4.8. (3 puntos) ¿La cantidad de actores influye en los ingresos de las películas? ¿Se han hecho películas con más actores en los últimos años?
+```{r ,echo=FALSE}
+correlación<-cor(pelis$actorsAmount, pelis$revenue)
+modelo<-lm(pelis$revenue~pelis$actorsAmount)
+summary(modelo)
+```
+
+Hay una realción positiva ente la cantidad de actores y los ingresos de las películas, el coeficiente de la cantidad de actores indica el cambio de promedio en ingresos por cada actor que es incorporado a la película, al ser el coeficiente postivo, omplica que hay relacion proporcional. La relación es significativa indicado por el valor p. 
+
+
+### 4.9. (3 puntos) ¿Es posible que la cantidad de hombres y mujeres en el reparto influya en la popularidad y los ingresos de las películas?
+
+
+### 4.10. (8 puntos) ¿Quiénes son los directores que hicieron las 20 películas mejor calificadas?
+Los directores que hicieron las 20 mejores películas son:
+
+```{r ,echo=FALSE}
+peli_ordenado<-pelis[order(pelis$voteCount),]
+mejor_peli<-tail(peli_ordenado,n=20)
+mejor_peli_dir<-(mejor_peli$director)
+directores<- unique(mejor_peli_dir)
+cat(directores, sep = ",")
+
+```
+
+### 4.11. (8 puntos) ¿Cómo se correlacionan los presupuestos con los ingresos? ¿Los altos presupuestos significan altos ingresos? Haga los gráficos que necesite, histograma, diagrama de dispersión.
+
+
+### 4.12. (5 puntos) ¿Se asocian ciertos meses de lanzamiento con mejores ingresos?
+
+```{r ,echo=FALSE}
+mejor_ingresos<-head(pelis$revenue)
+mese_ingresos<-data.frame(pelis$revenue, pelis$releaseDate)
+table(head((mese_ingresos),))
+
+```
+
+### 4.13. (6 puntos) ¿En qué meses se han visto los lanzamientos con mejores ingresos? ¿Cuántas películas, en promedio, se han lanzado por mes?
+e(datos$mes)
+
+
+### 4.14. (7 puntos) ¿Cómo se correlacionan las calificaciones con el éxito comercial?
+```{r ,echo=FALSE}
+plot(pelis$voteCount, pelis$revenue, xlab="Calificaciones", ylab="Ingreso")
+
+```
+
+
+### 4.15. (5 puntos) ¿Qué estrategias de marketing, como videos promocionales o páginas oficiales, generan mejores resultados?
+
+
+### 4.16. (4 puntos) ¿La popularidad del elenco está directamente correlacionada con el éxito de taquilla?
+```{r ,echo=FALSE}
+plot(pelis$actorsPopularity, pelis$popularity, xlab="Popularidad de actores", ylab="Éxito en taquilla")
+
+```
+
+
+## 5. (¡10 puntos extras!) Genere usted otras seis preguntas que le parezcan interesantes porque le permitan realizar otras exploraciones y respóndalas. No puede repetir ninguna de las instrucciones anteriores.
+
+
+
